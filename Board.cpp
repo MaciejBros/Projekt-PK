@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "GameController.h"
 #include <iostream>
 #include <random>
 #include <ctime>
@@ -54,26 +55,40 @@ void Board::print_gameboard() const
 
 void Board::add_cell(int x, int y)
 {
-	if (index(x, y)) m_gameboard[x][y] = true;
+	if (check_index(x, y)) m_gameboard[x][y] = true;
 	else std::cout << "invalid cell index" << std::endl;
 }
 
 
 void Board::remove_cell(int x, int y)
 {
-	if (index(x, y)) m_gameboard[x][y] = false;
+	if (check_index(x, y)) m_gameboard[x][y] = false;
 	else std::cout << "invalid cell index" << std::endl;
 }
 
 int Board::check_neighborhood(int x, int y)
 {
-	int counter_of_true_states = 0;
-	for (int i = -1; i < 2; i++)
+	if (check_index(x, y) == true and m_gameboard[x][y] == true)
 	{
-		for (int j = -1; j < 2; j++)
-			if (m_gameboard[x + i][y + j] == true and (j or i) != 0) counter_of_true_states++;
+		int counter_of_true_states = 0;
+		for (int i = -1; i < 2; i++)
+		{
+			for (int j = -1; j < 2; j++)
+			{
+				if (check_index(x + i, y + j) == true)
+				{
+					if (m_gameboard[x + i][y + j] == true and (j or i) != 0) counter_of_true_states++;
+				}
+				else
+					continue;
+			}
+		}
+		std::cout << counter_of_true_states;
+		return counter_of_true_states;
 	}
-	std::cout << counter_of_true_states;
-	return counter_of_true_states;
+	else std::cout << "chose point is empty!\n";
 }
 
+int Board::GetHeight() { return m_height; };
+int Board::GetWidth() { return m_width; };
+bool** Board::GetGameBoard() { return m_gameboard; };
