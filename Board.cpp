@@ -9,23 +9,13 @@
 
 Board::Board(int height, int width) : m_width(width), m_height(height)
 {
-	m_gameboard = new bool* [width];
-	for (int i = 0; i < width; i++)
-		m_gameboard[i] = new bool[height];
-
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-			m_gameboard[i][j] = false;
-	}
+	allocate_gameboard(width, height);
+	allocate_temp_gameboard(width, height);
 }
-
-Board::~Board()
+Board::~Board() 
 {
-	for (int i = 0; i < m_width; i++)
-		delete[] m_gameboard[i];
-
-	delete[] m_gameboard;
+	deallocate_gameboard();
+	deallocate_temp_gameboad();
 }
 
 void Board::set_random() const
@@ -52,6 +42,19 @@ void Board::print_gameboard() const
 	}
 }
 
+void Board::print_temp_gameboard() const
+{
+	for (int i = 0; i < m_width; i++)
+	{
+		std::cout << "\t";
+		for (int j = 0; j < m_height; j++)
+			std::cout << m_temp_gameboard[i][j] << " ";
+
+		std::cout << std::endl;
+	}
+}
+
+
 
 void Board::add_cell(int x, int y)
 {
@@ -59,6 +62,11 @@ void Board::add_cell(int x, int y)
 	else std::cout << "invalid cell index" << std::endl;
 }
 
+void Board::temp_add_cell(int x, int y)
+{
+	if (check_index(x, y)) m_temp_gameboard[x][y] = true;
+	else std::cout << "invalid cell index" << std::endl;
+}
 
 void Board::remove_cell(int x, int y)
 {
@@ -66,9 +74,17 @@ void Board::remove_cell(int x, int y)
 	else std::cout << "invalid cell index" << std::endl;
 }
 
+void Board::temp_remove_cell(int x, int y)
+{
+	if (check_index(x, y)) m_temp_gameboard[x][y] = false;
+	else std::cout << "invalid cell index" << std::endl;
+}
+
+
+
 int Board::check_neighborhood(int x, int y)
 {
-	if (check_index(x, y) == true and m_gameboard[x][y] == true)
+	if (check_index(x, y) == true)
 	{
 		int counter_of_true_states = 0;
 		for (int i = -1; i < 2; i++)
@@ -83,10 +99,56 @@ int Board::check_neighborhood(int x, int y)
 					continue;
 			}
 		}
-		std::cout << counter_of_true_states;
 		return counter_of_true_states;
 	}
-	else std::cout << "chose point is empty!\n";
+}
+
+void Board::copy_GameBoard_to_Temp()
+{
+	for (int i = 0; i < m_height; i++)
+	{
+		for (int j = 0; j < m_width; j++)
+		{
+			if (m_gameboard[i][j] == true)
+				temp_add_cell(i, j);
+			else
+				temp_remove_cell(i, j);
+		}
+	}
+}
+
+void Board::copy_Temp_to_Gameboard()
+{
+	for (int i = 0; i < m_height; i++)
+	{
+		for (int j = 0; j < m_width; j++)
+		{
+			if (m_temp_gameboard[i][j] == true)
+				add_cell(i, j);
+			else
+				remove_cell(i, j);
+		}
+	}
+}
+
+void Board::reset_array(char sign = 'G')
+{
+	if (sign == 'G')
+	{
+		for (int i = 0; i < m_width; i++)
+		{
+			for (int j = 0; j < m_height; j++)
+				m_gameboard[i][j] = false;
+		}
+	}
+	else if (sign == 'T')
+	{
+			for (int i = 0; i < m_width; i++)
+			{
+				for (int j = 0; j < m_height; j++)
+					m_temp_gameboard[i][j] = false;
+			}
+	}
 }
 
 int Board::GetHeight() { return m_height; };
