@@ -7,17 +7,17 @@
 #include <thread>
 #include <chrono>
 
-GameController::GameController(Board& brd):m_GameBoard(brd) {};
+GameController::GameController(Board& brd) :m_GameBoard(brd) {};
 
 GameController::~GameController()
 {
 
 }
 
-void GameController::SetState(int x, int y, char sign = '+')
+void GameController::SetState(int x, int y, int z, char sign = '+')
 {
-	if (sign == '+') m_GameBoard.add_cell(x, y);
-	else if (sign == '-') m_GameBoard.remove_cell(x, y);
+	if (sign == '+') m_GameBoard.add_cell(x, y ,z);
+	else if (sign == '-') m_GameBoard.remove_cell(x, y, z);
 }
 
 void GameController::StartGame()
@@ -36,7 +36,7 @@ void GameController::StopGame()
 
 void GameController::NextGeneration()
 {
-	m_GameBoard.copy_GameBoard_to_Temp();
+
 	bool** active_states_detector = m_GameBoard.GetGameBoard();
 	for (int i = 0; i < m_GameBoard.GetHeight(); i++)
 	{
@@ -60,5 +60,4 @@ void GameController::NextGeneration()
 	m_GameBoard.reset_array('T');
 	std::cout << std::endl << "=====================" << std::endl << std::endl;
 }
-
 

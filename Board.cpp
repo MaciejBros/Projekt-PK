@@ -7,82 +7,135 @@
 
 
 
-Board::Board(int height, int width) : m_width(width), m_height(height)
+Board::Board(int width, int height, int depth) : m_width(width), m_height(height), m_depth(depth)
 {
-	allocate_gameboard(width, height);
-	allocate_temp_gameboard(width, height);
+	allocate_gameboard(width, height, depth);
+
 }
-Board::~Board() 
+
+
+Board::~Board()
 {
 	deallocate_gameboard();
-	deallocate_temp_gameboad();
 }
+
+
+bool Board::check_index(int x, int y) const
+{
+	return (x >= 0 && x < m_width&& y >= 0 && y < m_height);
+}
+
+
+void Board::allocate_gameboard(int width, int height, int depth)
+{
+	if (m_gameboard == nullptr)
+	{
+		m_gameboard = new bool** [width];
+		for (int i = 0; i < width; i++)
+		{
+			m_gameboard[i] = new bool* [height];
+			for (int j = 0; j < height; j++)
+				m_gameboard[i][j] = new bool[depth];
+		}
+	}
+
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			for (int k = 0; k < depth; k++)
+				m_gameboard[i][j][k] = false;
+		}
+	}
+}
+
+
+
+void Board::deallocate_gameboard()
+{
+	if (m_gameboard != nullptr)
+	{
+		for (int i = 0; i < m_width; i++)
+		{
+			for (int j = 0; j < m_height; j++)
+			{
+				delete[] m_gameboard[i][j];
+			}
+			delete[] m_gameboard[i];
+		}
+		delete[] m_gameboard;
+	}
+}
+
 
 void Board::set_random() const
 {
 	std::mt19937 range(std::random_device{}());
 	std::uniform_int_distribution<int> value(0, 1);
-		for (int i = 0; i < m_width; i++)
+	for (int i = 0; i < m_width; i++)
+	{
+		for (int j = 0; j < m_height; j++)
 		{
-			for (int j = 0; j < m_height; j++)
-				m_gameboard[i][j] = value(range);
+			for (int k = 0; k < m_depth; k++)
+				m_gameboard[i][j][k] = value(range);
 		}
-}
-
-
-void Board::print_gameboard() const
-{
-	for (int i = 0; i < m_width; i++)
-	{
-		std::cout << "\t";
-		for (int j = 0; j < m_height; j++)
-			std::cout << m_gameboard[i][j] << " ";
-		
-		std::cout << std::endl;
-	}
-}
-
-void Board::print_temp_gameboard() const
-{
-	for (int i = 0; i < m_width; i++)
-	{
-		std::cout << "\t";
-		for (int j = 0; j < m_height; j++)
-			std::cout << m_temp_gameboard[i][j] << " ";
-
-		std::cout << std::endl;
 	}
 }
 
 
-
-void Board::add_cell(int x, int y)
+void Board::print_gameboard(int depth) const
 {
-	if (check_index(x, y)) m_gameboard[x][y] = true;
-	else std::cout << "invalid cell index" << std::endl;
+	if (depth == 0)
+	{
+		for (int k = 0; k <= 0; ++k)
+		{
+			for (int i = 0; i < m_width; ++i)
+			{
+				for (int j = 0; j < m_height; ++j)
+				{
+					std::cout << m_gameboard[i][j][k] << " ";
+				}
+				std::cout << std::endl;
+			}
+			std::cout << std::endl;
+		}
+	}
+	else
+	{
+		for (int k = 1; k == 1; ++k)
+		{
+			for (int i = 0; i < m_width; ++i)
+			{
+				for (int j = 0; j < m_height; ++j)
+				{
+					std::cout << m_gameboard[i][j][k] << " ";
+				}
+				std::cout << std::endl;
+			}
+			std::cout << std::endl;
+		}
+	}
 }
 
-void Board::temp_add_cell(int x, int y)
+
+void Board::add_cell(int x, int y, int z)
 {
-	if (check_index(x, y)) m_temp_gameboard[x][y] = true;
-	else std::cout << "invalid cell index" << std::endl;
+	if (check_index(x, y))
+		m_gameboard[x][y][z] = true;
+	else
+		std::cout << "invalid cell index" << std::endl;
 }
 
-void Board::remove_cell(int x, int y)
+void Board::remove_cell(int x, int y, int z)
 {
-	if (check_index(x, y)) m_gameboard[x][y] = false;
-	else std::cout << "invalid cell index" << std::endl;
-}
-
-void Board::temp_remove_cell(int x, int y)
-{
-	if (check_index(x, y)) m_temp_gameboard[x][y] = false;
-	else std::cout << "invalid cell index" << std::endl;
+	if (check_index(x, y))
+		m_gameboard[x][y][z] = false;
+	else
+		std::cout << "invalid cell index" << std::endl;
 }
 
 
-
-int Board::check_neighborhood(int x, int y)
+int Board::check_neighborhood(int x, int y, int z)
 {
 	if (check_index(x, y) == true)
 	{
@@ -93,7 +146,8 @@ int Board::check_neighborhood(int x, int y)
 			{
 				if (check_index(x + i, y + j) == true)
 				{
-					if (m_gameboard[x + i][y + j] == true and (j or i) != 0) counter_of_true_states++;
+					if (m_gameboard[x + i][y + j][z] == true && (j || i) != 0)
+						counter_of_true_states++;
 				}
 				else
 					continue;
@@ -103,54 +157,40 @@ int Board::check_neighborhood(int x, int y)
 	}
 }
 
-void Board::copy_GameBoard_to_Temp()
-{
-	for (int i = 0; i < m_height; i++)
-	{
-		for (int j = 0; j < m_width; j++)
-		{
-			if (m_gameboard[i][j] == true)
-				temp_add_cell(i, j);
-			else
-				temp_remove_cell(i, j);
-		}
-	}
-}
 
-void Board::copy_Temp_to_Gameboard()
+void Board::reset_array(char sign)
 {
-	for (int i = 0; i < m_height; i++)
+	if (sign == 'F')
 	{
-		for (int j = 0; j < m_width; j++)
+		for (int k = 0; k <= 0; k++)
 		{
-			if (m_temp_gameboard[i][j] == true)
-				add_cell(i, j);
-			else
-				remove_cell(i, j);
-		}
-	}
-}
-
-void Board::reset_array(char sign = 'G')
-{
-	if (sign == 'G')
-	{
-		for (int i = 0; i < m_width; i++)
-		{
-			for (int j = 0; j < m_height; j++)
-				m_gameboard[i][j] = false;
-		}
-	}
-	else if (sign == 'T')
-	{
 			for (int i = 0; i < m_width; i++)
 			{
 				for (int j = 0; j < m_height; j++)
-					m_temp_gameboard[i][j] = false;
+				{
+
+					m_gameboard[i][j][k] = false;
+				}
 			}
+		}
+	}
+	else if(sign == 'S')
+	{
+		for (int k = 0; k == 1; k++)
+		{
+			for (int i = 0; i < m_width; i++)
+			{
+				for (int j = 0; j < m_height; j++)
+				{
+
+					m_gameboard[i][j][k] = false;
+				}
+			}
+		}
 	}
 }
 
+
 int Board::GetHeight() { return m_height; };
 int Board::GetWidth() { return m_width; };
-bool** Board::GetGameBoard() { return m_gameboard; };
+bool*** Board::GetGameBoard() { return m_gameboard; };
