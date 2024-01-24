@@ -1,13 +1,15 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+
+#include "qtmetamacros.h"
 class Board
 {
 private:
 
     int m_height;
     int m_width;
-    bool** m_gameboard;
+    bool** m_gameboard = nullptr;
     bool** m_temp_gameboard;
     bool check_index(int x, int y)const
     {
@@ -17,12 +19,12 @@ private:
 
     void allocate_gameboard(int width, int height)
     {
-        if (m_gameboard == nullptr)
-        {
+        //if (m_gameboard == nullptr)
+        //{
             m_gameboard = new bool* [width];
             for (int i = 0; i < width; i++)
                 m_gameboard[i] = new bool[height];
-        }
+        //}
 
         for (int i = 0; i < m_width; i++)
         {
@@ -33,12 +35,12 @@ private:
 
     void allocate_temp_gameboard(int width, int height)
     {
-        if (m_temp_gameboard == nullptr)
-        {
+        //if (m_temp_gameboard == nullptr)
+        //{
             m_temp_gameboard = new bool* [width];
             for (int i = 0; i < width; i++)
                 m_temp_gameboard[i] = new bool[height];
-        }
+        //}
 
         for (int i = 0; i < m_width; i++)
         {
@@ -71,7 +73,8 @@ private:
 public:
 
     Board(int, int);
-    void set_random() const;
+    Board();
+    void set_random();
     void print_gameboard() const;
     void print_temp_gameboard() const;
     void add_cell(int, int);
@@ -86,6 +89,8 @@ public:
     int GetWidth();
     bool** GetGameBoard();
     ~Board();
+signals:
+    void boardUpdated(int,int,int);
 };
 
 #endif // BOARD_H

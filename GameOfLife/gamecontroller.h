@@ -1,6 +1,8 @@
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
 
+#pragma once
+
 class Board;
 
 class GameController

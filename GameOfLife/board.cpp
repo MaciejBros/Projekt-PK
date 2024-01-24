@@ -1,10 +1,9 @@
+
 #include "board.h"
-#include "GameController.h"
 #include <iostream>
 #include <random>
-#include <cstdlib>
-
-
+#include <QDebug>
+#include "QDebug"
 
 
 Board::Board(int height, int width) : m_height(height), m_width(width)
@@ -13,21 +12,35 @@ Board::Board(int height, int width) : m_height(height), m_width(width)
     allocate_temp_gameboard(width, height);
 }
 
+Board::Board()
+{
+    m_height = 17;
+    m_width = 19;
+    allocate_gameboard(m_width, m_height);
+    allocate_temp_gameboard(m_width, m_height);
+}
+
 Board::~Board()
 {
     deallocate_gameboard();
     deallocate_temp_gameboad();
 }
 
-void Board::set_random() const
+void Board::set_random()
 {
+    int rng;
     std::mt19937 range(std::random_device{}());
     std::uniform_int_distribution<int> value(0, 1);
     for (int i = 0; i < m_width; i++)
     {
         for (int j = 0; j < m_height; j++)
+        {
             m_gameboard[i][j] = value(range);
+            rng = value(range);
+            emit boardUpdated(i,j,rng);
+        }
     }
+
 }
 
 
@@ -102,6 +115,7 @@ int Board::check_neighborhood(int x, int y)
         }
         return counter_of_true_states;
     }
+    return NULL;
 }
 
 void Board::copy_GameBoard_to_Temp()

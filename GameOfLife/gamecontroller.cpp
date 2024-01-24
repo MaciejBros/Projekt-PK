@@ -1,5 +1,8 @@
 #include "gamecontroller.h"
+
 #include "board.h"
+#include "GameController.h"
+#include <iostream>
 #include <thread>
 #include <chrono>
 
@@ -52,7 +55,7 @@ void GameController::NextGeneration()
     m_GameBoard.reset_array('G');
     m_GameBoard.copy_Temp_to_Gameboard();
     m_GameBoard.reset_array('T');
-    //std::cout << std::endl << "=====================" << std::endl << std::endl;
+    std::cout << std::endl << "=====================" << std::endl << std::endl;
 }
 
 
