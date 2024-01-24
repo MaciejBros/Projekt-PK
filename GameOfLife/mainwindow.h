@@ -1,11 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-//#include "board.h"
-//#include "gamecontroller.h"
 #include "board.h"
-#include "qgraphicsscene.h"
 #include <QMainWindow>
+#include <QGraphicsScene>
+#include <QSpinBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,15 +20,27 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void initializeScene(int rows, int columns);
+    void updateScene();
 
 private slots:
+    void updateBoardSize();
+    void updateGameOfLife();
 
-    void on_pushButton_2_clicked();
+    void on_Random_clicked();
+
+    void on_NextGen_clicked();
+
+    void handleBoardUpdated(int,int,int);
 
 private:
     Ui::MainWindow *ui;
-    Board *MyBoard;
-    //GameController gmcntr;
+    QVector<QVector<QGraphicsRectItem*>> cells;
     QGraphicsScene *scene;
+    QVector<QVector<bool>> gameBoard;
+    Board *m_board;
+    QGraphicsRectItem* rectangle;
+
+
 };
 #endif // MAINWINDOW_H
