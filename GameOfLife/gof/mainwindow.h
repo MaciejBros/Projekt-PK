@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "board.h"
+//#include "gamecontroller.h"
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QSpinBox>
@@ -33,7 +34,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(Board& brd, QWidget *parent = nullptr);
     ~MainWindow();
 
     void initializeScene(int rows, int columns);
@@ -44,15 +45,23 @@ private slots:
     void updateGameOfLife();
     void on_Random_clicked();
     void on_NextGen_clicked();
-    void handleBoardUpdated(int,int,int);
     void cellClicked(QGraphicsRectItem *clickedItem);
+    void NextGen();
+
+    void on_Apply_clicked();
+
+    void on_set_dimensions_clicked();
 
 private:
     Ui::MainWindow *ui;
     QVector<QVector<QGraphicsRectItem*>> cells;
-    CustomGraphicsScene *scene;  // Używamy naszej własnej klasy CustomGraphicsScene
+    CustomGraphicsScene *scene;
     QVector<QVector<bool>> gameBoard;
+    bool** board = nullptr;
     Board *m_board;
+    //GameController* cntrl;
+    int m_numCols = 0;
+    int m_numRows = 0;;
 };
 
 #endif // MAINWINDOW_H
