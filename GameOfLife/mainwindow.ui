@@ -19,6 +19,13 @@
      <widget class="QGraphicsView" name="okno"/>
     </item>
     <item>
+     <widget class="QPushButton" name="Apply">
+      <property name="text">
+       <string>Apply</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Width:</string>
@@ -49,6 +56,13 @@
      <widget class="QPushButton" name="Random">
       <property name="text">
        <string>Random</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="set_dimensions">
+      <property name="text">
+       <string>Set dimensions</string>
       </property>
      </widget>
     </item>
