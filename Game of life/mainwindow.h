@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "board.h"
+//#include "gamecontroller.h"
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QSpinBox>
@@ -58,6 +59,7 @@ private:
     QVector<QVector<bool>> gameBoard;
     bool** board = nullptr;
     Board *m_board;
+    //GameController* cntrl;
     int m_numCols = 0;
     int m_numRows = 0;;
 };

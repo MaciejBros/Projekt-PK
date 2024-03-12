@@ -6,6 +6,7 @@
 #include <QRandomGenerator>
 #include <QDebug>
 #include "board.h"
+//#include "gamecontroller.h"
 
 CustomGraphicsScene::CustomGraphicsScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -17,8 +18,7 @@ void CustomGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     QGraphicsItem *item = itemAt(event->scenePos(), QTransform());
     QGraphicsRectItem *clickedItem = qgraphicsitem_cast<QGraphicsRectItem*>(item);
 
-    if (clickedItem)
-    {
+    if (clickedItem) {
         emit cellClicked(clickedItem);
     }
 
@@ -28,6 +28,7 @@ void CustomGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 MainWindow::MainWindow(Board& brd, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    //, cntrl(GameCntrl.getGameController())
 {
     ui->setupUi(this);
 
@@ -37,6 +38,7 @@ MainWindow::MainWindow(Board& brd, QWidget *parent)
 
     m_numRows = 15;
     m_numCols = 15;
+
 
     m_board = &brd;
 
@@ -51,8 +53,11 @@ MainWindow::MainWindow(Board& brd, QWidget *parent)
     gameBoard.resize(m_numRows, QVector<bool>(m_numCols, false));
     updateScene();
 
+
+
     connect(ui->spinBoxWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::updateBoardSize);
     connect(ui->spinBoxHeight, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::updateBoardSize);
+    //connect(m_board, &Board::boardUpdatedRandom, this, &MainWindow::updateGameOfLife);
     connect(scene, &CustomGraphicsScene::cellClicked, this, &MainWindow::cellClicked);
 }
 
@@ -69,9 +74,7 @@ void MainWindow::initializeScene(int rows, int columns)
     bool** tempBoard = nullptr;
     tempBoard = new bool* [rows];
     for (int i = 0; i < rows; i++)
-    {
         tempBoard[i] = new bool[columns];
-    }
 
 
     for (int i = 0; i < rows; i++)
@@ -105,13 +108,15 @@ void MainWindow::updateBoardSize()
 
 void MainWindow::updateGameOfLife()
 {
+    //int width = ui->spinBoxWidth->value();
+    //int height = ui->spinBoxHeight->value();
     qDebug() << "Coumns: " << m_numCols<< "Rows" << m_numRows;
+
+    //board = m_board->GetGameBoard();
     bool** tempBoard = nullptr;
     tempBoard = new bool* [m_numRows];
     for (int i = 0; i < m_numRows; i++)
-    {
         tempBoard[i] = new bool[m_numCols];
-    }
 
     tempBoard = m_board->GetGameBoard();
 
@@ -123,13 +128,13 @@ void MainWindow::updateGameOfLife()
             QGraphicsRectItem * cell = cells[rows][cols];
              qDebug() << cols << " " << rows;
             if (tempBoard[rows][cols] == true)
-                {
-                    cell->setBrush(QBrush(Qt::black));
-                }
-                else
-                {
-                    cell->setBrush(QBrush(Qt::white));
-                }
+                    {
+                        cell->setBrush(QBrush(Qt::black));
+                    }
+                    else
+                    {
+                        cell->setBrush(QBrush(Qt::white));
+                    }
         }
     }
 }
@@ -160,9 +165,7 @@ void MainWindow::NextGen()
     bool** tempBoard = nullptr;
     tempBoard = new bool* [m_numRows];
     for (int i = 0; i < m_numRows; i++)
-    {
         tempBoard[i] = new bool[m_numCols];
-    }
     m_board->NextGeneration();
 
     tempBoard = m_board->GetGameBoard();
@@ -187,6 +190,22 @@ void MainWindow::NextGen()
 void MainWindow::cellClicked(QGraphicsRectItem *clickedItem)
 {
 
+    // int row = cell->y();
+    // int col = cell->x();
+
+    // if (gameBoard.size() > row && gameBoard[row].size() > col) {
+    //     gameBoard[row][col] = !gameBoard[row][col];
+
+    //     if (gameBoard[row][col]) {
+    //         m_board->add_cell(row,col);
+    //         clickedItem->setBrush(QBrush(Qt::black));
+    //         //qDebug() << row << col;
+    //     } else {
+    //         m_board->remove_cell(row,col);
+    //         clickedItem->setBrush(QBrush(Qt::white));
+    //         //qDebug() << row << col;
+    //     }
+    // }
 }
 
 void MainWindow::on_Random_clicked()

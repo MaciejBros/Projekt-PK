@@ -84,6 +84,7 @@ void Board::temp_add_cell(int x, int y)
 {
     if (check_index(x, y))
     {
+        //std::cout << "(x: " << x << " y: " << y << ")\n";
         m_temp_gameboard[x][y] = true;
     }
     else std::cout << "Add_temp_cell:\t invalid cell index\t x: " << x << " y: " << y << std::endl;
@@ -118,6 +119,7 @@ int Board::check_neighborhood(int x, int y)
                 }
             }
         }
+        //std::cout << counter_of_true_states;
         return counter_of_true_states;
     }
     return 0;
