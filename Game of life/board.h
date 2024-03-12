@@ -22,11 +22,12 @@ private:
 
     void allocate_gameboard(int numCols, int numRows)
     {
-        m_gameboard = new bool* [numRows];
-        for (int i = 0; i < numRows; i++)
-        {
-            m_gameboard[i] = new bool[numCols];
-        }
+        //if (m_gameboard == nullptr)
+
+            m_gameboard = new bool* [numRows];
+            for (int i = 0; i < numRows; i++)
+                m_gameboard[i] = new bool[numCols];
+
 
         for (int i = 0; i < m_numRows; i++)
         {
@@ -37,11 +38,12 @@ private:
 
     void allocate_temp_gameboard(int numCols, int numRows)
     {
-        m_temp_gameboard = new bool* [numRows];
-        for (int i = 0; i < numRows; i++)
-        {
-            m_temp_gameboard[i] = new bool[numCols];
-        }
+        //if (m_temp_gameboard == nullptr)
+
+            m_temp_gameboard = new bool* [numRows];
+            for (int i = 0; i < numRows; i++)
+                m_temp_gameboard[i] = new bool[numCols];
+
 
         for (int i = 0; i < m_numRows; i++)
         {
@@ -52,18 +54,22 @@ private:
 
     void deallocate_gameboard()
     {
-        for (int i = 0; i < m_numRows; i++)
-            delete[] m_gameboard[i];
+        //if (m_gameboard != nullptr)
 
-        delete[] m_gameboard;
+            for (int i = 0; i < m_numRows; i++)
+                delete[] m_gameboard[i];
+
+            delete[] m_gameboard;
     }
 
     void deallocate_temp_gameboad()
     {
-        for (int i = 0; i < m_numRows; i++)
-            delete[] m_temp_gameboard[i];
+        //if (m_temp_gameboard != nullptr)
 
-        delete[] m_temp_gameboard;
+            for (int i = 0; i < m_numRows; i++)
+                delete[] m_temp_gameboard[i];
+
+            delete[] m_temp_gameboard;
     }
 public:
 
